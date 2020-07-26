@@ -27,7 +27,7 @@ export default class Recipe {
         this.time = periods * 15;
     }
 
-    calcServing() {
+    calcServings() {
         this.servings = 4;
     }
 }
