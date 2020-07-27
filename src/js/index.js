@@ -3,6 +3,7 @@ import {elements, renderLoader, clearLoader} from './views/base'
 import * as searchView from './views/searchView'
 import Recipe from './models/Recipe'
 import * as recipeView from './views/recipeView'
+import List from './models/List'
 /*** Global state of the app
  * - Search object
  * - Current recipe object
@@ -115,14 +116,40 @@ const controlRecipe = async () => {
 // handling recipe btn click
 
 elements.recipe.addEventListener('click', el => {
-    if(event.target.matches('.btn-decrease, btn-decrease *')) {
+    if(event.target.matches('.btn-decrease, .btn-decrease *')) {
+        // console.log("decrease btn clicked");
         if(state.recipe.servings > 1) {
             state.recipe.updateServings('dec');
             recipeView.updateServingsIngredients(state.recipe);
         }
-    } else if(event.target.matches('.btn-increase, btn-increase *')) {
+    } else if(event.target.matches('.btn-increase, .btn-increase *')) {
         state.recipe.updateServings('inc');
         recipeView.updateServingsIngredients(state.recipe);
     }
-    console.log(state.recipe);
+    // console.log(state.recipe);
 });
+
+
+window.l = new List();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
