@@ -4,6 +4,7 @@ import * as searchView from './views/searchView'
 import Recipe from './models/Recipe'
 import * as recipeView from './views/recipeView'
 import List from './models/List'
+import * as listView from './views/listView'
 /*** Global state of the app
  * - Search object
  * - Current recipe object
@@ -12,7 +13,7 @@ import List from './models/List'
  */
 
 const state = {};
-
+window.state = state;
 
 /***Search Controller
  * 
@@ -125,15 +126,46 @@ elements.recipe.addEventListener('click', el => {
     } else if(event.target.matches('.btn-increase, .btn-increase *')) {
         state.recipe.updateServings('inc');
         recipeView.updateServingsIngredients(state.recipe);
+    } else if(event.target.matches('.recipe__btn-add, .recipe__btn-add *')) {
+        controlList();
     }
-    // console.log(state.recipe);
+
 });
 
 
-window.l = new List();
+/**********
+ * 
+ * LIST CONTROLLER
+ * 
+ */
 
+const controlList = () => {
+    // Create a new list if there is none
+    if(!state.list) state.list = new List();
 
+    state.recipe.ingredients.forEach(el => {
+        const item = state.list.addItem(el.count, el.unit, el.ingredient);
+        listView.renderItem(item);
+    })
+}
 
+// Handling  update and delete list item events
+elements.shopping.addEventListener('click', el => {
+    const id = el.target.closest('.shopping__item').dataset.itemid;
+
+    console.log(id);
+    if(el.target.matches('.shopping__delete, .shopping__delete *')) {
+        console.log('delete btn clicked');
+        state.list.deleteItem(id);
+
+        listView.deleteItem(id);
+    } else if(el.target.matches('.shopping__count-value')) {
+        
+        const val = parseFloat(el.target.value, 10);
+        console.log(val);
+        state.list.updateCount(id, val);
+    }
+});
 
 
 
