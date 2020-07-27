@@ -83,6 +83,9 @@ const controlRecipe = async () => {
         // Create new recipe object
         state.recipe = new Recipe(id);
 
+        if(state.search) {
+            searchView.highlightedSelected(id); 
+        }
         // TESTING
         // window.r = state.recipe;
         try {
