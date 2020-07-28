@@ -15,16 +15,12 @@ import * as likesView from './views/likesView'
  */
 
 const state = {};
-window.state = state;
-
 
 /************* SEARCH CONTROLLER *************** */
 
 const controlSearch = async () => {
     // 1. Get query from view
     const query = searchView.getInput() // TODO
-    // const query = 'pizza';
-    // console.log(query);
 
     if(query) {
         // 2. New search object and add it to state
@@ -51,14 +47,6 @@ elements.searchForm.addEventListener('submit', el => {
     controlSearch();
 })
 
-
-// TESTING
-// window.addEventListener('load', el => {
-//     el.preventDefault();
-//     controlSearch();
-
-// })
-
 elements.searchResPages.addEventListener('click', el => {
     const btn = el.target.closest('.btn-inline');
     if(btn) {
@@ -74,9 +62,6 @@ elements.searchResPages.addEventListener('click', el => {
 
 const controlRecipe = async () => {
     const id = window.location.hash.replace('#', '');
-
-    console.log(id);
-
     if(id) {
         // Prepare the UI for changes
         recipeView.clearRecipe();
@@ -87,8 +72,6 @@ const controlRecipe = async () => {
         if(state.search) {
             searchView.highlightedSelected(id); 
         }
-        // TESTING
-        // window.r = state.recipe;
         try {
             // Get recipe data
             await state.recipe.getRecipe();
@@ -166,8 +149,7 @@ elements.shopping.addEventListener('click', el => {
 
 
 /****** LIKE CONTROLLER **************/
-state.likes = new Like();
-likesView.toggleLikeMenu(state.likes.getNumLikes());
+
 const controlLike = () => {
     if(!state.likes) state.likes = new Like();
     const currId = state.recipe.id;
@@ -199,8 +181,12 @@ const controlLike = () => {
 }
 
 
-
-
+window.addEventListener('load', () => {
+    state.likes = new Like();
+    state.likes.readStorage();
+    likesView.toggleLikeMenu(state.likes.getNumLikes());
+    state.likes.likes.forEach(like => likesView.renderLike(like));
+});
 
 
 
