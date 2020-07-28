@@ -5,6 +5,7 @@ import Recipe from './models/Recipe'
 import * as recipeView from './views/recipeView'
 import List from './models/List'
 import * as listView from './views/listView'
+import Like from './models/Like'
 /*** Global state of the app
  * - Search object
  * - Current recipe object
@@ -15,9 +16,9 @@ import * as listView from './views/listView'
 const state = {};
 window.state = state;
 
-/***Search Controller
- * 
- */
+
+/************* SEARCH CONTROLLER *************** */
+
 const controlSearch = async () => {
     // 1. Get query from view
     const query = searchView.getInput() // TODO
@@ -68,10 +69,7 @@ elements.searchResPages.addEventListener('click', el => {
 
 
 
-/***Recipe Controller
- * 
- * 
- */
+/************ RECIPE CONTROLLER *************** */
 
 const controlRecipe = async () => {
     const id = window.location.hash.replace('#', '');
@@ -117,27 +115,25 @@ const controlRecipe = async () => {
 // handling recipe btn click
 
 elements.recipe.addEventListener('click', el => {
-    if(event.target.matches('.btn-decrease, .btn-decrease *')) {
+    if(el.target.matches('.btn-decrease, .btn-decrease *')) {
         // console.log("decrease btn clicked");
         if(state.recipe.servings > 1) {
             state.recipe.updateServings('dec');
             recipeView.updateServingsIngredients(state.recipe);
         }
-    } else if(event.target.matches('.btn-increase, .btn-increase *')) {
+    } else if(el.target.matches('.btn-increase, .btn-increase *')) {
         state.recipe.updateServings('inc');
         recipeView.updateServingsIngredients(state.recipe);
-    } else if(event.target.matches('.recipe__btn-add, .recipe__btn-add *')) {
+    } else if(el.target.matches('.recipe__btn-add, .recipe__btn-add *')) {
         controlList();
+    }else if (el.target.matches('.recipe__love, .recipe__love *' )) {
+        // Like controller
+        controlLike();
     }
-
 });
 
 
-/**********
- * 
- * LIST CONTROLLER
- * 
- */
+/******* LIST CONTROLLER ************ */
 
 const controlList = () => {
     // Create a new list if there is none
@@ -168,6 +164,33 @@ elements.shopping.addEventListener('click', el => {
 });
 
 
+/****** LIKE CONTROLLER **************/
+
+const controlLike = () => {
+    if(!state.likes) state.likes = new Like();
+    const currId = state.recipe.id;
+    if(!state.likes.isLiked(currId)) {
+        // Add like to the state
+        const newLike = state.likes.addLike(currId,
+             state.recipe.title,
+             state.recipe.author,
+             state.recipe.img
+             );
+        // Toggle the like btn
+
+        // Add like to UI list
+        console.log(state.likes);
+
+    } else {
+
+        // Remove like from the state
+        state.likes.deleteLike(currId);
+        // Toggle the like btn
+
+        // Remove like from the UI
+        console.log(state.likes);
+    }
+}
 
 
 
